@@ -68,6 +68,12 @@ def remove_html(text):
 
 
 # Aplicacion de la limpieza
+# En resumen, tenemos:
+# - Conversion a minusculas
+# - Remover URL
+# - Remover HTML
+# - Remover signos de puntuacion
+# - Remover stopwords
 train["text"] = get_lowercase(train["text"])
 train["text"] = train["text"].apply(lambda x : remove_URL(x))
 train["text"] = train["text"].apply(lambda x : remove_html(x))
