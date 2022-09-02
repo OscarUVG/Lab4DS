@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from wordcloud import WordCloud
 
 import re
 import string
@@ -163,3 +164,21 @@ plt.show()
 x,y=map(list,zip(*top_tweet_trigrams_non_disaster))
 sns.barplot(x=y,y=x, palette="Blues_r").set_title("Trigrama no desastre")
 plt.show()
+
+
+# Nube de palabras 0
+
+plt.figure(figsize=(12,15))
+wc=WordCloud(height=500,width=500,min_font_size=10,background_color='white')
+w_c=wc.generate(train[train['target']==0]['text'].str.cat(sep=" "))
+plt.imshow(w_c)
+plt.show()
+
+# Nube de palabras 1
+
+plt.figure(figsize=(12,15))
+wc=WordCloud(height=500,width=500,min_font_size=10,background_color='white')
+w_c=wc.generate(train[train['target']==1]['text'].str.cat(sep=" "))
+plt.imshow(w_c)
+plt.show()
+
