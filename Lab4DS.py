@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from wordcloud import WordCloud
 
 import re
 import string
@@ -15,6 +14,16 @@ from nltk.util import ngrams
 from collections import defaultdict
 from collections import  Counter
 
+from wordcloud import WordCloud
+
+#sklearn
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn import feature_extraction, linear_model, model_selection, preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 train = pd.read_csv("train.csv")
@@ -125,7 +134,7 @@ plt.show()
 
 # Bigramas en texts de desastre
 
-from sklearn.feature_extraction.text import CountVectorizer
+
 
 def get_top_tweet_bigrams(corpus, n=None):
     vec = CountVectorizer(ngram_range=(2, 2)).fit(corpus)
@@ -182,3 +191,15 @@ w_c=wc.generate(train[train['target']==1]['text'].str.cat(sep=" "))
 plt.imshow(w_c)
 plt.show()
 
+#Función de clasificación
+
+x_train, x_test, y_train, y_test = train_test_split(train.text, train.target, random_state=42)
+
+vectorizer = feature_extraction.text.TfidfVectorizer()
+
+train_vectors = vectorizer.fit_transform(train["text"])
+
+clf = linear_model.RidgeClassifier()
+
+scores = model_selection.cross_val_score(clf, train_vectors, train["target"], cv=3, scoring="f1")
+scores
