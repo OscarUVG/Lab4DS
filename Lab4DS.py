@@ -121,3 +121,45 @@ for word,count in most:
 sns.barplot(x = freq[:10] , y = words[:10], palette="Blues_r").set_title("Palabras más comunes en tweets normales")
 plt.show()
 
+
+# Bigramas en texts de desastre
+
+from sklearn.feature_extraction.text import CountVectorizer
+
+def get_top_tweet_bigrams(corpus, n=None):
+    vec = CountVectorizer(ngram_range=(2, 2)).fit(corpus)
+    bag_of_words = vec.transform(corpus)
+    sum_words = bag_of_words.sum(axis=0) 
+    words_freq = [(word, sum_words[0, idx]) for word, idx in vec.vocabulary_.items()]
+    words_freq =sorted(words_freq, key = lambda x: x[1], reverse=True)
+    return words_freq[:n]
+
+top_tweet_bigrams_disaster = get_top_tweet_bigrams(train[train["target"] == 1]['text'])[:10]
+top_tweet_bigrams_non_disaster = get_top_tweet_bigrams(train[train["target"] == 0]['text'])[:10]
+x,y=map(list,zip(*top_tweet_bigrams_disaster))
+sns.barplot(x=y,y=x, palette="Blues_r").set_title("Bigrama desastre")
+plt.show()
+
+x,y=map(list,zip(*top_tweet_bigrams_non_disaster))
+sns.barplot(x=y,y=x, palette="Blues_r").set_title("Bigrama no desastre")
+plt.show()
+
+# Trigramas en texts de desastre
+
+def get_top_tweet_trigrams(corpus, n=None):
+    vec = CountVectorizer(ngram_range=(3, 3)).fit(corpus)
+    bag_of_words = vec.transform(corpus)
+    sum_words = bag_of_words.sum(axis=0) 
+    words_freq = [(word, sum_words[0, idx]) for word, idx in vec.vocabulary_.items()]
+    words_freq =sorted(words_freq, key = lambda x: x[1], reverse=True)
+    return words_freq[:n]
+
+top_tweet_trigrams_disaster = get_top_tweet_trigrams(train[train["target"] == 1]['text'])[:10]
+top_tweet_trigrams_non_disaster = get_top_tweet_trigrams(train[train["target"] == 0]['text'])[:10]
+x,y=map(list,zip(*top_tweet_trigrams_disaster))
+sns.barplot(x=y,y=x, palette="Blues_r").set_title("Trigrama desastre")
+plt.show()
+
+x,y=map(list,zip(*top_tweet_trigrams_non_disaster))
+sns.barplot(x=y,y=x, palette="Blues_r").set_title("Trigrama no desastre")
+plt.show()
