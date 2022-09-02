@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 import re
 import string
@@ -8,6 +10,11 @@ import string
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.util import ngrams
+
+from collections import defaultdict
+from collections import  Counter
+
+
 
 train = pd.read_csv("train.csv")
 test = pd.read_csv("test.csv")
@@ -79,4 +86,38 @@ train["text"] = train["text"].apply(lambda x : remove_URL(x))
 train["text"] = train["text"].apply(lambda x : remove_html(x))
 train["text"] = train["text"].apply(lambda x : remove_punct(x))
 train["text"] = train["text"].apply(lambda x : remove_stop_words(x))
-print(train["text"].head(50))
+
+#EDA de palabras mas comunes
+corpus_disaster = get_corpus(train[train["target"] == 1]["text"])
+corpus_non_disaster = get_corpus(train[train["target"] == 0]["text"])
+
+# Palabras comunes en texts de desastre
+# Las palabras mas comunes son:
+# fire, news, via, disaster, california, suicide, police, amp, people, killed
+
+counter=Counter(corpus_disaster)
+most=counter.most_common()
+words=[]
+freq=[]
+for word,count in most:
+    words.append(word)
+    freq.append(count)
+
+sns.barplot(x = freq[:10] , y = words[:10], palette="Blues_r").set_title("Palabras más comunes en tweets desastres")
+plt.show()
+
+# Palabras comunes en texts de no desastre
+# Las palabras mas comunes son:
+# like, im, amp, new, get, dont, one, body, via, would
+
+counter=Counter(corpus_non_disaster)
+most=counter.most_common()
+words=[]
+freq=[]
+for word,count in most:
+        words.append(word)
+        freq.append(count)
+
+sns.barplot(x = freq[:10] , y = words[:10], palette="Blues_r").set_title("Palabras más comunes en tweets normales")
+plt.show()
+
