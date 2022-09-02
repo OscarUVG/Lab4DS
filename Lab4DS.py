@@ -1,12 +1,16 @@
 import numpy as np
 import pandas as pd
 
+import re
+import string
+
 # Librerias de Natural Language Toolkit para el trato de palabras
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.util import ngrams
 
 train = pd.read_csv("train.csv")
+test = pd.read_csv("test.csv")
 
 print("--- Vista inicial de los datos ---")
 print(train.head())
@@ -63,3 +67,10 @@ def remove_html(text):
     return html.sub(r'',text)
 
 
+# Aplicacion de la limpieza
+train["text"] = get_lowercase(train["text"])
+train["text"] = train["text"].apply(lambda x : remove_URL(x))
+train["text"] = train["text"].apply(lambda x : remove_html(x))
+train["text"] = train["text"].apply(lambda x : remove_punct(x))
+train["text"] = train["text"].apply(lambda x : remove_stop_words(x))
+print(train["text"].head(50))
