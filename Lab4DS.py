@@ -45,4 +45,21 @@ def remove_punct(text):
     table=str.maketrans('','',string.punctuation)
     return text.translate(table)
 
+# Homogenizamos al data set conviertiendo todo a minusculas
+def get_lowercase(texts):
+    lowercase_texts = []
+    for text in texts:
+        lowercase_texts.append(text.lower())
+    return lowercase_texts
+
+# Removimiento de URL's
+def remove_URL(text):
+    url = re.compile(r'https?://\S+|www\.\S+')
+    return url.sub(r'',text)
+
+# Removimiento de HTML's
+def remove_html(text):
+    html=re.compile(r'<.*?>')
+    return html.sub(r'',text)
+
 
